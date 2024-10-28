@@ -1,23 +1,48 @@
 <!doctype html>
-<title>Upload new File</title>
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-{% endif %}
-{% endwith %}
-<h1>Upload new File</h1>
-<form method=post enctype=multipart/form-data>
-    <input type=file name=file>
-    <input type=submit value=Upload>
-</form>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>resnet101 image labels</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Upload image to analyse</h1>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-warning" role="alert">
+                          {{ message }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <form method="post" enctype="multipart/form-data" class="row mb-3">
+                    <div class="col-8">
+                        <label for="imgFileInput" class="form-label">Image to analyse</label>
+                        <input type="file" class="form-control" id="imgFileInput" name="file">
+                    </div>
+                    <div class="col-4 align-self-end">
+                        <input type="submit" value="Analyse"  class="btn btn-primary">
+                    </div>
+                </form>
 
-<img src="data:image/jpeg;base64,{{ imgEncoded }}" />
+                {% if imgEncoded %}
+                    <img class="img-fluid mb-3" src="data:image/jpeg;base64,{{ imgEncoded }}" />
+                {% endif %}
 
-<h2>image labels</h2>
-<pre>
-{{ imageLabels }}
-</pre>
+                {% if imageLabels %}
+                    <h2>Image labels</h2>
+                    <ul>
+                        {% for label in imageLabels -%}
+                        <li>{{ label[0] }} - {{ label[1] }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

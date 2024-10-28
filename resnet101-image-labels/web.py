@@ -34,6 +34,10 @@ def upload_file():
             imgEncoded =  base64.b64encode(buffer.getvalue()).decode()
 
             return render_template('index.html', imageLabels=imageLabels, imgEncoded=imgEncoded)
+        else:
+            flash('File is not image')
+            return redirect(request.url)
+
     return render_template('index.html')
 
 
