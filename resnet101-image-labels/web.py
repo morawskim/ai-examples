@@ -70,3 +70,6 @@ def getImageLabels(buffer):
     _, indices = torch.sort(out, descending=True)
     result = [(labels[idx], percentage[idx].item()) for idx in indices[0][:5]]
     return result
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=False)
