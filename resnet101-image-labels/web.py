@@ -7,6 +7,7 @@ from torchvision import models
 from torchvision import transforms
 import torch
 import base64
+import magic
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = MAX_LENGTH = 15 * 1000 * 1000
@@ -20,19 +21,16 @@ def upload_file():
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
+        buffer = convert_to_buffer(file.stream)
+        mimetype = magic.from_buffer(buffer.getvalue(), mime=True)
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        if file and file.content_type in ['image/jpeg', 'image/png']:
-            buffer = io.BytesIO()
-            buffer.write(file.stream.read(MAX_LENGTH))
-            buffer.seek(0)
+        if file and mimetype in ['image/jpeg', 'image/png']:
             imageLabels = getImageLabels(buffer)
-            buffer.seek(0)
             imgEncoded =  base64.b64encode(buffer.getvalue()).decode()
-
             return render_template('index.html', imageLabels=imageLabels, imgEncoded=imgEncoded)
         else:
             flash('File is not image')
@@ -40,6 +38,12 @@ def upload_file():
 
     return render_template('index.html')
 
+def convert_to_buffer(stream):
+    buffer = io.BytesIO()
+    buffer.write(stream.read(MAX_LENGTH))
+    buffer.seek(0)
+
+    return buffer
 
 def getImageLabels(buffer):
     resnet = models.resnet101(pretrained=True)
