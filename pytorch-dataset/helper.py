@@ -39,7 +39,6 @@ def train_step(
     train_loss, train_acc = 0, 0
 
     for batch, (x, y) in enumerate(dataloader):
-        print(f"enumerate x:{x.shape} y: {y.shape} batch: {batch}")
         x,y = x.to(device), y.to(device)
         y_pred = model(x)
 
