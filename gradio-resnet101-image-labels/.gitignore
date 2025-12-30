@@ -1,0 +1,8 @@
+/.env
+/bin/
+/lib/
+/lib64/
+/lib64
+/include/
+/.idea/
+/share/man/
